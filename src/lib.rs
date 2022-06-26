@@ -1,14 +1,17 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use yew::{function_component, html};
+
+use wasm_bindgen::prelude::*;
+
+#[function_component(App)]
+fn app() -> Html {
+    html! {
+        <div>
+            <h1> { "Hello Tax Yew!" } </h1>
+        </div> 
+    }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[wasm_bindgen(start)]
+pub fn run() {
+    yew::start_app::<App>();
 }

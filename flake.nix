@@ -21,7 +21,7 @@
 
         rust = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
 
-        rustPlatform = pkgs.mkRustPlatform {
+        rustPlatform = pkgs.makeRustPlatform {
           rustc = rust;
           cargo = rust;
         };
