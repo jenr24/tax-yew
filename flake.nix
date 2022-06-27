@@ -12,7 +12,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, rust-overlay, flake-utils, flake-compat }: 
+  outputs = { self, nixpkgs, rust-overlay, flake-utils, flake-compat }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         overlays = [ (import rust-overlay) ];
@@ -27,17 +27,24 @@
         };
 
         dependencies = with pkgs; [
-          rust rust-analyzer rustfmt
-          rnix-lsp nixfmt
-          pkg-config 
-          wasm-bindgen-cli wasm-pack trunk
+          rust
+          rust-analyzer
+          rustfmt
+          rnix-lsp
+          nixfmt
+          nixpkgs-fmt
+          pkg-config
+          wasm-bindgen-cli
+          wasm-pack
+          trunk
           openssl
         ];
 
-      in rec {
+      in
+      rec {
         packages = flake-utils.lib.flattenTree {
           tax-yew = rustPlatform.buildRustPackage rec {
-            pname = "tax-yew";
+            pname = "tax_yew";
             version = "0.0.1";
             nativeBuildInputs = dependencies;
 
@@ -49,9 +56,11 @@
 
             installPhase = ''
               echo 'Creating out dir...'
-              mkdir -p $out/lib;
-              echo 'Installing wasm module to $out/lib/'
-              cp target/wasm32-unknown-unknown/release/${pname}.wasm $out/lib/;
+              echo 'Packaging WASM binary for the web...'
+              wasm-bindgen \
+                --out-dir $out/bin \
+                --target web \
+                target/wasm32-unknown-unknown/release/${pname}.wasm;
             '';
 
             cargoLock = { lockFile = ./Cargo.lock; };
@@ -62,8 +71,8 @@
 
         defaultPackage = packages.tax-yew;
 
-        devShell = pkgs.mkShell { 
-          packages = dependencies; 
+        devShell = pkgs.mkShell {
+          packages = dependencies;
           shellHook = ''
           '';
         };

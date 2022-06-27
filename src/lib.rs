@@ -1,6 +1,6 @@
-use yew::{function_component, html};
-
 use wasm_bindgen::prelude::*;
+
+use yew::{function_component, html};
 
 #[function_component(App)]
 fn app() -> Html {
